@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 var ownership = [
-  {'device': 'Phone1', 'person' : 'User1'},
-  {'device': 'Phone2', 'person' : 'User2'},
-  {'device': 'Phone3', 'person' : 'User3'},
+  {'device': 'Phone1', 'person': 'User1'},
+  {'device': 'Phone2', 'person': 'User2'},
+  {'device': 'Phone3', 'person': 'User3'},
 ];
 
 void main() => runApp(MyApp());
@@ -50,7 +50,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -71,13 +70,38 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView.builder(
           itemCount: ownership.length,
           itemBuilder: (context, index) {
-
             print(ownership[index]['device'].toString());
 
             return Row(
               children: <Widget>[
-                Text(ownership[index]['device']),
-                Text(ownership[index]['person'])
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(ownership[index]['device'],
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(ownership[index]['person'],
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                )
               ],
             );
           },
@@ -85,5 +109,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  
 }
