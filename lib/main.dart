@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+var ownership = [
+  {'device': 'Phone1', 'person' : 'User1'},
+  {'device': 'Phone2', 'person' : 'User2'},
+  {'device': 'Phone3', 'person' : 'User3'},
+];
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -20,7 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Hackaton 2019 Home Page'),
     );
   }
 }
@@ -44,18 +50,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,21 +68,22 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: GridView.count(
-            // Create a grid with 2 columns. If you change the scrollDirection to
-            // horizontal, this produces 2 rows.
-            crossAxisCount: 2,
-              // Generate 100 widgets that display their index in the List.
-              children: List.generate(100, (index) {
-                return Center(
-                  child: Text(
-                    'Item $index',
-                    style: Theme.of(context).textTheme.headline,
-                  ),
-                );
-              }),
-            ),
+        child: ListView.builder(
+          itemCount: ownership.length,
+          itemBuilder: (context, index) {
+
+            print(ownership[index]['device'].toString());
+
+            return Row(
+              children: <Widget>[
+                Text(ownership[index]['device']),
+                Text(ownership[index]['person'])
+              ],
+            );
+          },
+        ),
       ),
     );
   }
+  
 }
