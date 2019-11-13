@@ -73,7 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
             print(ownership[index]['device'].toString());
 
             return GestureDetector(
-              onTap: (){print("tapped row $index");},
+              onTap: (){print("tapped row $index");
+                _showEditDialog(context, index);
+              },
               behavior: HitTestBehavior.opaque,
               child: Row(
                 children: <Widget>[
@@ -113,4 +115,51 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  void _showEditDialog(BuildContext context, int index) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Center(
+                  child: Text(
+                    'Who is using the device: ' + ownership[index]['device'] + ' ?',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Please enter the name of the new user',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 16, 0, 8),
+                    child: RaisedButton(
+
+                      onPressed: () {},
+                      child: Text("Save"),
+                    ),
+                  ),
+                  FlatButton(
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }
+                    )
+                ],
+              ));
+        }
+    );
+  }
+
 }
