@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-var ownership = [
-  {'device': 'Phone1', 'person': 'User1'},
-  {'device': 'Phone2', 'person': 'User2'},
-  {'device': 'Phone3', 'person': 'User3'},
-];
+
 
 void main() => runApp(MyApp());
 
@@ -50,6 +46,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  var ownership;
+  final _formKey = GlobalKey<FormState>();
+  final ownerController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    ownerController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ownership = [
+      {'device': 'Phone1', 'person': 'User1'},
+      {'device': 'Phone2', 'person': 'User2'},
+      {'device': 'Phone3', 'person': 'User3'},
+    ];
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -138,6 +157,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(
                       color: Colors.black,
                     ),
+                  ),
+                  TextFormField(
+                    obscureText: false,
+                    controller: ownerController,
+                    textAlign: TextAlign.center,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter owners name';
+                      }
+                      return null;
+                    },
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 16, 0, 8),
