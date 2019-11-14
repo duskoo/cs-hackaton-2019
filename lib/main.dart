@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(MyApp());
 
@@ -46,9 +45,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  var ownership;
-  final _formKey = GlobalKey<FormState>();
+//  var ownership;
   final ownerController = TextEditingController();
 
   @override
@@ -61,13 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    ownership = [
-      {'device': 'Phone1', 'person': 'User1'},
-      {'device': 'Phone2', 'person': 'User2'},
-      {'device': 'Phone3', 'person': 'User3'},
-    ];
+//    ownership = [
+//      {'device': 'Phone1', 'person': 'User1'},
+//      {'device': 'Phone2', 'person': 'User2'},
+//      {'device': 'Phone3', 'person': 'User3'},
+//    ];
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,64 +74,72 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: ListView.builder(
-          itemCount: ownership.length,
-          itemBuilder: (context, index) {
-            print(ownership[index]['device'].toString());
-
-            return GestureDetector(
-              onTap: (){print("tapped row $index");
-                _showEditDialog(context, index);
-              },
-              behavior: HitTestBehavior.opaque,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(ownership[index]['device'],
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(ownership[index]['person'],
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            );
-          },
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
         ),
+        body: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: StreamBuilder(
+            stream: Firestore.instance.collection('ownership').snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const Text('Loading...');
+
+              return ListView.builder(
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) {
+                    return renderRow(context, snapshot.data.documents[index]);
+                  });
+            }
+          ),
+        ));
+  }
+
+  Widget renderRow(BuildContext context, DocumentSnapshot document) {
+    return GestureDetector(
+      onTap: () {
+        print("tapped row " + document["device"]);
+        _showEditDialog(context, document);
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(document['device'],
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(document['person'],
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
 
-  void _showEditDialog(BuildContext context, int index) {
+  void _showEditDialog(BuildContext context, DocumentSnapshot document) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -143,10 +147,9 @@ class _MyHomePageState extends State<MyHomePage> {
           return AlertDialog(
               title: Center(
                   child: Text(
-                    'Who is using the device: ' + ownership[index]['device'] + ' ?',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )
-              ),
+                'Who is using the device: ' + document['device'] + ' ?',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -174,7 +177,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: RaisedButton(
                       onPressed: () {
                         setState(() {
-                          ownership[index]["person"] = ownerController.text;
+//                          TODO: fix
+//                          document["person"] = ownerController.text;
+                          document.reference.updateData(
+                            {"person" : ownerController.text}
+                          );
                         });
                         //dismiss modal dialog
                         Navigator.of(context).pop();
@@ -190,12 +197,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () {
                         //dismiss modal dialog
                         Navigator.of(context).pop();
-                      }
-                    )
+                      })
                 ],
               ));
-        }
-    );
+        });
   }
-
 }
