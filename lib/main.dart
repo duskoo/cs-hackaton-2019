@@ -172,8 +172,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 16, 0, 8),
                     child: RaisedButton(
-
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          ownership[index]["person"] = ownerController.text;
+                        });
+                        //dismiss modal dialog
+                        Navigator.of(context).pop();
+                      },
                       child: Text("Save"),
                     ),
                   ),
@@ -183,6 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(color: Colors.blue),
                       ),
                       onPressed: () {
+                        //dismiss modal dialog
                         Navigator.of(context).pop();
                       }
                     )
