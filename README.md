@@ -1,10 +1,12 @@
 # flutter_hackaton_2019
 
-A new Flutter project.
+- Make sure your IDE settings for Flutter/Dart SDK are correct: Android Studio/Preferences/Languages & Frameworks/Flutter
+- Perform "Packages Get" (when IDE prompts you) - this will resolve (download) required libraries.
+- Steps(branches) 01-08 work without backend.
+- Building code beyond step08 will require you to add config files for selected Firebase/Firestore account. 
+- Instructions for using Firestore as a backend to your Flutter app: https://www.youtube.com/watch?v=DqJ_KjFzL9I
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
 
